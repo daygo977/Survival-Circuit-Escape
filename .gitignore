@@ -1,0 +1,44 @@
+# ==== Unity (cache/build) ====
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+[Uu]ser[Ss]ettings/
+[Aa]ssets/AssetStoreTools*
+
+# Crash & backup files
+*.stacktrace
+*.bak
+*.old
+
+# ==== IDE / Editor ====
+# Visual Studio artifacts (Unity can regenerate these)
+.vs/
+*.csproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.unityproj
+*.pidb
+*.booproj
+*.svd
+*.opendb
+*.VC.db
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# VS Code (ignore editor settings)
+.vscode/
+*.code-workspace
+
+# ==== OS junk ====
+.DS_Store
+Thumbs.db
+desktop.ini
