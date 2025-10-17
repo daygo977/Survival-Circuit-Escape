@@ -584,7 +584,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!212 &1791803307
 SpriteRenderer:
@@ -813,12 +813,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCam: {fileID: 519420031}
-  length: 20
+  length: 16.5
   width: 0.06
   color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   hideSysCursor: 0
   stickDeadZone: 0.2
-  rotateToAim: 0
+  rotateToAim: 1
+  rotationSpeed: 720
   spriteAngleOffset: -90
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
