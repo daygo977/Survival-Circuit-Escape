@@ -13,20 +13,20 @@ MonoBehaviour:
   m_Name: Melee (Melee)
   m_EditorClassIdentifier: 
   displayName: Weapon
-  kind: 0
-  fireRate: 8
-  damage: 1
-  pellets: 1
+  kind: 2
+  fireRate: 3
+  damage: 3
+  pellets: 0
   spreadDegrees: 0
   range: 12
   hitMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   blockMask:
     serializedVersion: 2
     m_Bits: 0
   projectilePrefab: {fileID: 0}
-  projectileSpeed: 18
-  projectileLifeTime: 3
+  projectileSpeed: 0
+  projectileLifeTime: 0
   meleeArcDegrees: 100
   meleeRange: 1.6
