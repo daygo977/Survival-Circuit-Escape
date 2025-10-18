@@ -44,3 +44,6 @@ TagManager:
   - name: VFX
     uniqueID: 2595549063
     locked: 0
+  - name: Bullets
+    uniqueID: 3945186215
+    locked: 0
