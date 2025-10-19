@@ -5,8 +5,12 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// Handles weapon firing using WeaponData. Reads aim from PlayerAim.
 /// </summary>
+[RequireComponent(typeof(PlayerInput))]
 public class WeaponSystem : MonoBehaviour
 {
+    [SerializeField] private PlayerInput playerInput;
+    [SerializeField] private string fireActionName = "Fire";
+
     [Header("References")]
     public PlayerAim aim;
     public Transform muzzle;
@@ -24,6 +28,11 @@ public class WeaponSystem : MonoBehaviour
 
     void Awake()
     {
+        if (!playerInput)
+        {
+            playerInput = GetComponent<PlayerInput>();
+        }
+
         if (!aim)
         {
             aim = GetComponent<PlayerAim>();
@@ -35,11 +44,6 @@ public class WeaponSystem : MonoBehaviour
             muzzle.SetParent(transform);
             muzzle.localPosition = new Vector3(0f, 0.5f, 0f);
         }
-    }
-
-    public void OnFire(InputValue v)
-    {
-        isFiring = v.isPressed;
     }
 
     void SetIndex(int i)
@@ -184,6 +188,11 @@ public class WeaponSystem : MonoBehaviour
             return;
         }
 
+        if (playerInput)
+        {
+            isFiring = playerInput.actions[fireActionName].IsPressed();
+        }
+
         var w = loadout[currentIndex];
         cooldown -= Time.deltaTime;
 
@@ -192,5 +201,25 @@ public class WeaponSystem : MonoBehaviour
             Fire(w);
             cooldown = 1f / Mathf.Max(0.01f, w.fireRate);
         }
+    }
+
+    void OnEnable()
+    {
+        isFiring = false;
+    }
+
+    void OnDisable()
+    {
+        isFiring = false;
+    }
+
+    public void OnFireStarted()
+    {
+        isFiring = true;
+    }
+
+    public void OnFireCanceled()
+    {
+        isFiring = false;
     }
 }
