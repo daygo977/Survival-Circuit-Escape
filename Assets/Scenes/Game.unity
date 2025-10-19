@@ -866,6 +866,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a312c9bbaedf7a478911b00c05d1f15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerInput: {fileID: 0}
+  fireActionName: Fire
   aim: {fileID: 1791803312}
   muzzle: {fileID: 651002325}
   loadout:
@@ -875,8 +877,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e6e73dd48d42d9a4f9f07c7befc93f64, type: 2}
   - {fileID: 11400000, guid: 8d239e15191e59a499815a156a77cd2f, type: 2}
   currentIndex: 0
-  tracerPrefab: {fileID: 0}
-  tracerDuration: 0.025
+  tracerPrefab: {fileID: 503084658788484767, guid: 563d4a3400c14404cb0560fa3e50e26f, type: 3}
+  tracerDuration: 0.03
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
