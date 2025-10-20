@@ -46,6 +46,21 @@ public class WeaponSystem : MonoBehaviour
         }
     }
 
+    void PlayMuzzleFlash()
+    {
+        if (!muzzle)
+        {
+            return;
+        }
+
+        var flash = muzzle.GetComponentInChildren<MuzzleFlash>(true);
+
+        if (flash)
+        {
+            flash.gameObject.SetActive(true);
+        }
+    }
+
     void SetIndex(int i)
     {
         currentIndex = Mathf.Clamp(i, 0, Mathf.Max(0, loadout.Count - 1));
@@ -104,6 +119,8 @@ public class WeaponSystem : MonoBehaviour
 
     void FireHitscan(WeaponData w, Vector2 origin, Vector2 direct)
     {
+        PlayMuzzleFlash();
+        
         int pellets = Mathf.Max(1, w.pellets);
         for (int i = 0; i < pellets; i++)
         {
