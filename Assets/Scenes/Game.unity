@@ -880,6 +880,7 @@ MonoBehaviour:
   currentIndex: 0
   tracerPrefab: {fileID: 503084658788484767, guid: 563d4a3400c14404cb0560fa3e50e26f, type: 3}
   tracerDuration: 0.03
+  meleeArcPrefab: {fileID: 3142292914366706351, guid: 064f2fb40c0ae7847935b140a5145963, type: 3}
 --- !u!1 &1907224492
 GameObject:
   m_ObjectHideFlags: 0

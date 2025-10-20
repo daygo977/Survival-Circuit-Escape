@@ -23,6 +23,9 @@ public class WeaponSystem : MonoBehaviour
     public LineRenderer tracerPrefab;
     public float tracerDuration = 0.025f;
 
+    [Header("VFX - Melee")]
+    public MeleeArcVFX meleeArcPrefab;
+
     float cooldown;
     bool isFiring;
 
@@ -120,7 +123,7 @@ public class WeaponSystem : MonoBehaviour
     void FireHitscan(WeaponData w, Vector2 origin, Vector2 direct)
     {
         PlayMuzzleFlash();
-        
+
         int pellets = Mathf.Max(1, w.pellets);
         for (int i = 0; i < pellets; i++)
         {
@@ -183,6 +186,12 @@ public class WeaponSystem : MonoBehaviour
                     h.TakeDamage(w.damage);
                 }
             }
+        }
+
+        if (meleeArcPrefab)
+        {
+            var fx = Instantiate(meleeArcPrefab);
+            fx.Show(origin, direct, w.meleeRange, w.meleeArcDegrees);
         }
     }
 
