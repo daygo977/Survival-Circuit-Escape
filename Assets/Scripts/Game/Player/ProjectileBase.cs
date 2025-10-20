@@ -6,6 +6,11 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class ProjectileBase : MonoBehaviour
 {
+    [Header("Visuals")]
+    public bool alignToVelocity = true;
+    [Tooltip("Degrees to add so the sprite's nose points along travel")]
+    public float spriteAngleOffset = 0f;
+
     public int damage = 1;
     public float speed = 10f;
     public float lifetime = 2f;
@@ -24,7 +29,10 @@ public class ProjectileBase : MonoBehaviour
     public virtual void Fire(Vector2 position, Vector2 direct, int dmg, float spd, float lifeTime, LayerMask mask)
     {
         transform.position = position;
-        transform.right = direct;
+
+        float angle = Mathf.Atan2(direct.y, direct.x) * Mathf.Rad2Deg + spriteAngleOffset;
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
+
         damage = dmg;
         speed = spd;
         lifetime = lifeTime;
@@ -40,6 +48,12 @@ public class ProjectileBase : MonoBehaviour
         if (life <= 0f)
         {
             Despawn();
+        }
+
+        if (alignToVelocity && rb && rb.velocity.sqrMagnitude > 0.0001f)
+        {
+            float ang = Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg + spriteAngleOffset;
+            transform.rotation = Quaternion.Euler(0f, 0f, ang);
         }
     }
 
