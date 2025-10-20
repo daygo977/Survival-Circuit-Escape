@@ -25,7 +25,7 @@ MonoBehaviour:
   blockMask:
     serializedVersion: 2
     m_Bits: 0
-  projectilePrefab: {fileID: 8195965147018408016, guid: 27169d8c07e82644c80e4a64184a5cd5, type: 3}
+  projectilePrefab: {fileID: 5831116573807680100, guid: 29383a1d857d6c8449558e97ff21ecb2, type: 3}
   projectileSpeed: 20
   projectileLifeTime: 3
   meleeArcDegrees: 0
