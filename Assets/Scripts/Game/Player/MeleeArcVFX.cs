@@ -23,7 +23,7 @@ public class MeleeArcVFX : MonoBehaviour
         float half = arcDeg * 0.5f * Mathf.Deg2Rad;
         float start = Mathf.Atan2(direct.y, direct.x) - half;
 
-        for (int i = 0; i < segments; i++)
+        for (int i = 0; i <= segments; i++)
         {
             float a = start + (half * 2f) * (i / (float)segments);
             Vector3 p = origin + new Vector3(Mathf.Cos(a), Mathf.Sin(a), 0f) * range;
@@ -38,7 +38,7 @@ public class MeleeArcVFX : MonoBehaviour
         t -= Time.deltaTime;
         if (t <= 0f)
         {
-            gameObject.SetActive(false);
+            Destroy(gameObject);
         }
     }
 }
