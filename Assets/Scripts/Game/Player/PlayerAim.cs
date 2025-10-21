@@ -44,6 +44,7 @@ public class PlayerAim : MonoBehaviour
     private Vector2 aimDirect = Vector2.right;  //Current normalized aim direction
     private Vector2 lastMouseScreen;            //Last screen-space mouse position (to detect movement)
     private float targetAngleDeg;               //Target facing angle in degrees
+    public Vector2 AimDirection => aimDirect;   //read-only getter
 
     void Awake()
     {

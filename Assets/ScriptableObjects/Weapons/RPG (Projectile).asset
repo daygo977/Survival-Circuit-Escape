@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b22a0dc56b9b5564b9524f4e097f21f4, type: 3}
+  m_Name: RPG (Projectile)
+  m_EditorClassIdentifier: 
+  displayName: Weapon
+  kind: 1
+  fireRate: 1.1
+  damage: 5
+  pellets: 1
+  spreadDegrees: 0
+  range: 15
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 64
+  blockMask:
+    serializedVersion: 2
+    m_Bits: 0
+  projectilePrefab: {fileID: 5831116573807680100, guid: 29383a1d857d6c8449558e97ff21ecb2, type: 3}
+  projectileSpeed: 20
+  projectileLifeTime: 3
+  meleeArcDegrees: 0
+  meleeRange: 0
