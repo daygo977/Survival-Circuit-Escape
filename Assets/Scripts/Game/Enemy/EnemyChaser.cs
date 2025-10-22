@@ -1,9 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
-using UnityEngine.UIElements;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class EnemyChaser : MonoBehaviour
@@ -23,6 +18,12 @@ public class EnemyChaser : MonoBehaviour
     public float attackRange = 0.6f;
     public int contactDamage = 1;
     public float attackCooldowm = 0.7f;
+
+    [Header("Crowd Seperation")]
+    public LayerMask enemyMask;
+    public float seperationRadius = 0.8f;
+    public float seperationWeight = 1.5f;
+    static readonly Collider2D[] _neighbors = new Collider2D[16];
 
     Transform target;
     Rigidbody2D rb;
@@ -87,7 +88,29 @@ public class EnemyChaser : MonoBehaviour
         avoid += AvoidInDirection(Rotate(direct, -sideAngle));
         avoid *= avoidWeight;
 
-        Vector2 finalDirect = (direct + avoid).normalized;
+        Vector2 sep = Vector2.zero;
+        int n = Physics2D.OverlapCircleNonAlloc(transform.position, seperationRadius, _neighbors, enemyMask);
+        for (int i = 0; i < n; i++)
+        {
+            var c = _neighbors[i];
+            if (!c || c.attachedRigidbody == rb)
+            {
+                continue;
+            }
+
+            Vector2 away = (Vector2)(transform.position - c.transform.position);
+            float d2 = away.sqrMagnitude;
+            if (d2 > 0.0001f)
+            {
+                sep += away.normalized / Mathf.Max(d2, 0.1f);
+            }
+        }
+        if (sep != Vector2.zero)
+        {
+            sep = sep.normalized * seperationWeight;
+        }
+
+        Vector2 finalDirect = (direct + avoid + sep).normalized;
         rb.velocity = finalDirect * desiredSpeed;
 
         cd -= Time.fixedDeltaTime;
@@ -130,5 +153,8 @@ public class EnemyChaser : MonoBehaviour
         {
             Gizmos.DrawWireSphere(transform.position, attackRange);
         }
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, seperationRadius);
     }
 }

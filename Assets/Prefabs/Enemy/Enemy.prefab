@@ -188,3 +188,8 @@ MonoBehaviour:
   attackRange: 0.6
   contactDamage: 1
   attackCooldowm: 0.7
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 64
+  seperationRadius: 0.8
+  seperationWeight: 1.5
