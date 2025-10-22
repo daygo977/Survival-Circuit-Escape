@@ -16,10 +16,10 @@ public class RocketProjectile : ProjectileBase
         var hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius, hitMask);
         foreach (var c in hits)
         {
-            var h = c.GetComponent<Health>();
+            var h = c.GetComponent<EnemyHealth>();
             if (h)
             {
-                h.TakeDamage(damage);
+                h.EnemyTakeDamage(damage);
             }
         }
         base.OnTriggerEnter2D(other);   //despawns itself via ProjectileBase.cs

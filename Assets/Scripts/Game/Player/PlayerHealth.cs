@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Health : MonoBehaviour
+public class PlayerHealth : MonoBehaviour
 {
     [Header("Stats")]
     public int maxHp = 3;
@@ -21,7 +21,7 @@ public class Health : MonoBehaviour
         Lives = startingLives;
     }
 
-    public void TakeDamage(int dmg)
+    public void PlayerTakeDamage(int dmg)
     {
         if (invul || dmg <= 0)
         {

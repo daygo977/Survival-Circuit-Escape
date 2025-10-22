@@ -157,10 +157,10 @@ public class WeaponSystem : MonoBehaviour
             if (hit.collider != null)
             {
                 //If the first thing we hit is damageable, apply the correct amount of damage
-                var h = hit.collider.GetComponent<Health>();
+                var h = hit.collider.GetComponent<EnemyHealth>();
                 if (h)
                 {
-                    h.TakeDamage(w.damage);
+                    h.EnemyTakeDamage(w.damage);
                 }
 
                 end = hit.point;    //Cut tracer to impact
@@ -202,10 +202,10 @@ public class WeaponSystem : MonoBehaviour
             // Angle (direction, to) is less than or equal to halfarc, then target is inside the swing wedge
             if (Vector2.Angle(direct, to) <= halfArc)
             {
-                var h = c.GetComponent<Health>();
+                var h = c.GetComponent<EnemyHealth>();
                 if (h)
                 {
-                    h.TakeDamage(w.damage);
+                    h.EnemyTakeDamage(w.damage);
                 }
             }
         }

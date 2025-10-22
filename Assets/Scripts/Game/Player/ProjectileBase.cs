@@ -69,10 +69,10 @@ public class ProjectileBase : MonoBehaviour
             return;
         }
 
-        var h = other.GetComponent<Health>();
+        var h = other.GetComponent<EnemyHealth>();
         if (h)
         {
-            h.TakeDamage(damage);
+            h.EnemyTakeDamage(damage);
 
             Despawn();      //remove projectile on hit
         }
