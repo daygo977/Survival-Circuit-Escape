@@ -20,7 +20,7 @@ public class EnemyChaser : MonoBehaviour
     [Header("Attack")]
     public float attackRange = 0.6f;    // Can hit player within radius
     public int contactDamage = 1;       // Damage per hit
-    public float attackCooldowm = 0.7f; // Time between hits (prevent same enemy from attacking too quickly)
+    public float attackCooldown = 0.7f; // Time between hits (prevent same enemy from attacking too quickly)
 
     // Crowd Seperation (prevents stacking)
     [Header("Crowd Seperation")]
@@ -134,7 +134,7 @@ public class EnemyChaser : MonoBehaviour
         {
             // Apply damage to the player and reset the cool down
             playerHealth.PlayerTakeDamage(contactDamage);
-            cd = attackCooldowm;
+            cd = attackCooldown;
         }
     }
 
