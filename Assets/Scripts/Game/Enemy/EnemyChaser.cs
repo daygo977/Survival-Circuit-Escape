@@ -22,11 +22,11 @@ public class EnemyChaser : MonoBehaviour
     public int contactDamage = 1;       // Damage per hit
     public float attackCooldown = 0.7f; // Time between hits (prevent same enemy from attacking too quickly)
 
-    // Crowd Seperation (prevents stacking)
-    [Header("Crowd Seperation")]
+    // Crowd Separation (prevents stacking)
+    [Header("Crowd Separation")]
     public LayerMask enemyMask;             // Layer for other enemies
-    public float seperationRadius = 0.8f;   // Radius to find neighbors for seperation
-    public float seperationWeight = 1.5f;   // Strength for seperation steering
+    public float separationRadius = 0.8f;   // Radius to find neighbors for separation
+    public float separationWeight = 1.5f;   // Strength for separation steering
     static readonly Collider2D[] _neighbors = new Collider2D[16];   // Small buffer
 
     // Runtime references/states
@@ -101,9 +101,9 @@ public class EnemyChaser : MonoBehaviour
         avoid += AvoidInDirection(Rotate(direct, -sideAngle));  // left feeler
         avoid *= avoidWeight;
 
-        // Seperation, push away from nearby enemies (in enemyMask)
+        // Separation, push away from nearby enemies (in enemyMask)
         Vector2 sep = Vector2.zero;
-        int n = Physics2D.OverlapCircleNonAlloc(transform.position, seperationRadius, _neighbors, enemyMask);
+        int n = Physics2D.OverlapCircleNonAlloc(transform.position, separationRadius, _neighbors, enemyMask);
         for (int i = 0; i < n; i++)
         {
             var c = _neighbors[i];
@@ -121,7 +121,7 @@ public class EnemyChaser : MonoBehaviour
         }
         if (sep != Vector2.zero)
         {
-            sep = sep.normalized * seperationWeight;
+            sep = sep.normalized * separationWeight;
         }
 
         // Combine steering and apply velocity
@@ -171,7 +171,7 @@ public class EnemyChaser : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-        // Attack range (red) and seperation radius (yellow) for tunning
+        // Attack range (red) and separation radius (yellow) for tunning
         Gizmos.color = Color.red;
         if (attackRange > 0f)
         {
@@ -179,6 +179,6 @@ public class EnemyChaser : MonoBehaviour
         }
 
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, seperationRadius);
+        Gizmos.DrawWireSphere(transform.position, separationRadius);
     }
 }
