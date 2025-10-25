@@ -77,6 +77,8 @@ public class EnemySpawner : MonoBehaviour
             StartCoroutine(SpawnDelayedRetry(i));
             return;
         }
+
+        var go = Instantiate(enemyPrefab, pos, Quaternion.identity, parentForEnemies ? parentForEnemies : null);
     }
 
     IEnumerator SpawnDelayedRetry(int i)
