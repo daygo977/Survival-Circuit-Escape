@@ -63,6 +63,12 @@ public class PlayerHealth : MonoBehaviour
                     weapon.enabled = false;
                 }
 
+                var rb = GetComponent<Rigidbody2D>();
+                if (rb)
+                {
+                    rb.velocity = Vector2.zero;
+                }
+
             }
         }
         else

@@ -23,4 +23,13 @@ public class PlayerMovement : MonoBehaviour
     {
         _movementInput = inputValue.Get<Vector2>();
     }
+
+    private void OnDisable()
+    {
+        _movementInput = Vector2.zero;
+        if (_rigidbody)
+        {
+            _rigidbody.velocity = Vector2.zero;
+        }
+    }
 }
