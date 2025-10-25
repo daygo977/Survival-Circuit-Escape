@@ -14,7 +14,7 @@ public class EnemySpawner : MonoBehaviour
 
     [Header("Timing")]
     public float initialDelay = 0.25f;
-    public float spawmDelay = 0.15f;
+    public float spawnDelay = 0.15f;
 
     [Header("Wave")]
     public int spawnCount = 10;
@@ -25,6 +25,12 @@ public class EnemySpawner : MonoBehaviour
     public float clearRadius = 0.5f;
     public int maxPlacementTries = 8;
     public float jitterRadius = 0.6f;
+
+    [Header("Alive Cap")]
+    public int maxAlive = 25;
+
+    int _alive = 0;
+    int _spawned = 0;
 
     void OnValidate()
     {
@@ -48,12 +54,23 @@ public class EnemySpawner : MonoBehaviour
 
         do
         {
-            for (int i = 0; i < spawnCount; i++)
-            {
-                SpawnOne(i);
-                yield return new WaitForSeconds(spawmDelay);
-            }
+            _alive = 0;
+            _spawned = 0;
 
+            while (_spawned < spawnCount)
+            {
+                if (_alive < maxAlive)
+                {
+                    SpawnOne(_spawned);
+                    _spawned++;
+                    yield return new WaitForSeconds(spawnDelay);
+                }
+                else
+                {
+                    yield return null;
+                }
+            }
+            
             if (loop)
             {
                 yield return new WaitForSeconds(loopPause);
@@ -79,6 +96,15 @@ public class EnemySpawner : MonoBehaviour
         }
 
         var go = Instantiate(enemyPrefab, pos, Quaternion.identity, parentForEnemies ? parentForEnemies : null);
+        _alive++;
+
+        var ticket = go.AddComponent<EnemySpawnTicket>();
+        ticket.owner = this;
+    }
+
+    public void NotifyEnemyGone()
+    {
+        _alive = Mathf.Max(0, _alive - 1);
     }
 
     IEnumerator SpawnDelayedRetry(int i)
