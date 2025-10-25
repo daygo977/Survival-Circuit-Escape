@@ -29,6 +29,10 @@ public class EnemySpawner : MonoBehaviour
     [Header("Alive Cap")]
     public int maxAlive = 25;
 
+    [Header("Activation (player proximity)")]
+    public float activationRadius = 10f;
+    public Transform player;
+
     int _alive = 0;
     int _spawned = 0;
 
@@ -48,6 +52,20 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        if (!player)
+        {
+            var p = GameObject.FindGameObjectWithTag("Player");
+            if (p)
+            {
+                player = p.transform;
+            }
+        }
+
+        StartCoroutine(SpawnLoop());
+    }
+
     IEnumerator SpawnLoop()
     {
         yield return new WaitForSeconds(initialDelay);
@@ -59,9 +77,16 @@ public class EnemySpawner : MonoBehaviour
 
             while (_spawned < spawnCount)
             {
-                if (_alive < maxAlive)
+                if (_alive >= maxAlive)
                 {
-                    SpawnOne(_spawned);
+                    yield return null;
+                    continue;
+                }
+
+                bool didSpawn = TrySpawnOne();
+
+                if (didSpawn)
+                {
                     _spawned++;
                     yield return new WaitForSeconds(spawnDelay);
                 }
@@ -70,7 +95,7 @@ public class EnemySpawner : MonoBehaviour
                     yield return null;
                 }
             }
-            
+
             if (loop)
             {
                 yield return new WaitForSeconds(loopPause);
@@ -79,38 +104,74 @@ public class EnemySpawner : MonoBehaviour
         while (loop);
     }
 
-    void SpawnOne(int i)
+    bool TrySpawnOne()
     {
         if (!enemyPrefab || points == null || points.Length == 0)
         {
-            return;
+            return false;
         }
 
-        Transform p = points[i % points.Length];
-
-        Vector2 pos;
-        if (!TryFindClearSpot(p.position, out pos))
+        Transform spawnPoint;
+        if (!PickActiveSpawnPoint(out spawnPoint))
         {
-            StartCoroutine(SpawnDelayedRetry(i));
-            return;
+            return false;
         }
 
-        var go = Instantiate(enemyPrefab, pos, Quaternion.identity, parentForEnemies ? parentForEnemies : null);
+        Vector2 finalPos;
+        if (!TryFindClearSpot(spawnPoint.position, out finalPos))
+        {
+            return false;
+        }
+
+        var go = Instantiate(enemyPrefab, finalPos, Quaternion.identity, parentForEnemies ? parentForEnemies : null);
         _alive++;
 
         var ticket = go.AddComponent<EnemySpawnTicket>();
         ticket.owner = this;
+
+        return true;
+    }
+
+    bool PickActiveSpawnPoint(out Transform chosen)
+    {
+        chosen = null;
+        if (points == null || points.Length == 0)
+        {
+            return false;
+        }
+
+        if (!player)
+        {
+            chosen = points[Random.Range(0, points.Length)];
+            return chosen != null;
+        }
+
+        float radiusSqr = activationRadius * activationRadius;
+        int start = Random.Range(0, points.Length);
+
+        for (int offset = 0; offset < points.Length; offset++)
+        {
+            int index = (start + offset) % points.Length;
+            var pt = points[index];
+            if (!pt)
+            {
+                continue;
+            }
+
+            Vector2 diff = (Vector2)pt.position - (Vector2)player.position;
+            if (diff.sqrMagnitude <= radiusSqr)
+            {
+                chosen = pt;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void NotifyEnemyGone()
     {
         _alive = Mathf.Max(0, _alive - 1);
-    }
-
-    IEnumerator SpawnDelayedRetry(int i)
-    {
-        yield return null;
-        SpawnOne(i);
     }
 
     bool TryFindClearSpot(Vector2 center, out Vector2 pos)
@@ -151,34 +212,25 @@ public class EnemySpawner : MonoBehaviour
         return true;
     }
 
-    void Start()
-    {
-        StartCoroutine(SpawnLoop());
-    }
-
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.green;
         if (points != null)
         {
             foreach (var t in points)
             {
-                if (t)
+                if (!t)
                 {
-                    Gizmos.DrawSphere(t.position, clearRadius);
+                    continue;
                 }
-            }
-        }
 
-        Gizmos.color = Color.magenta;
-        if (points != null)
-        {
-            foreach (var t in points)
-            {
-                if (t)
-                {
-                    Gizmos.DrawSphere(t.position, jitterRadius);
-                }
+                Gizmos.color = Color.green;
+                Gizmos.DrawWireSphere(t.position, clearRadius);
+
+                Gizmos.color = Color.magenta;
+                Gizmos.DrawWireSphere(t.position, jitterRadius);
+
+                Gizmos.color = Color.cyan;
+                Gizmos.DrawWireSphere(t.position, activationRadius);
             }
         }
     }
