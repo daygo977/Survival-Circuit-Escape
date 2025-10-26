@@ -24,7 +24,7 @@ MonoBehaviour:
     m_Bits: 64
   blockMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   projectilePrefab: {fileID: 0}
   projectileSpeed: 0
   projectileLifeTime: 0

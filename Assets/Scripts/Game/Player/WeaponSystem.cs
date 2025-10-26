@@ -8,29 +8,30 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerInput))]
 public class WeaponSystem : MonoBehaviour
 {
-    [SerializeField] private PlayerInput playerInput;
-    [SerializeField] private string fireActionName = "Fire";
+    [SerializeField] private PlayerInput playerInput;           //Player input
+    [SerializeField] private string fireActionName = "Fire";       //Action name in action map
 
     [Header("References")]
-    public PlayerAim aim;
-    public Transform muzzle;
+    public PlayerAim aim;       //Helps give normalized aim direction
+    public Transform muzzle;    //Where the shots will come from (child of player)
 
     [Header("Loadout")]
-    public List<WeaponData> loadout = new();
-    public int currentIndex = 0;
+    public List<WeaponData> loadout = new();        //Order equals slot order for switching
+    public int currentIndex = 0;                    //Currently equipped slot
 
     [Header("VFX (optional)")]
-    public LineRenderer tracerPrefab;
-    public float tracerDuration = 0.025f;
+    public LineRenderer tracerPrefab;       //short-lived line for hitscan visuals
+    public float tracerDuration = 0.025f;      //Tracer duration
 
     [Header("VFX - Melee")]
-    public MeleeArcVFX meleeArcPrefab;
+    public MeleeArcVFX meleeArcPrefab;      //short-lived arc visual (wedges) for melee visuals
 
-    float cooldown;
-    bool isFiring;
+    float cooldown;     //time until next shot is allowed to fire
+    bool isFiring;      //current fire button state (pressed, held, no pressed/held)
 
     void Awake()
     {
+        //Auto-bind components when nothing is assigned to them
         if (!playerInput)
         {
             playerInput = GetComponent<PlayerInput>();
@@ -41,6 +42,7 @@ public class WeaponSystem : MonoBehaviour
             aim = GetComponent<PlayerAim>();
         }
 
+        //Auto-create muzzle if not assigned yet
         if (!muzzle)
         {
             muzzle = new GameObject("Muzzle").transform;
@@ -49,6 +51,7 @@ public class WeaponSystem : MonoBehaviour
         }
     }
 
+    /// Toggle small muzzle flash vfx (temporarly a orange circle) if present
     void PlayMuzzleFlash()
     {
         if (!muzzle)
@@ -56,6 +59,7 @@ public class WeaponSystem : MonoBehaviour
             return;
         }
 
+        //Looks under muzzle for a disabled MuzzleFlash object (child) and enables it briefly
         var flash = muzzle.GetComponentInChildren<MuzzleFlash>(true);
 
         if (flash)
@@ -64,12 +68,14 @@ public class WeaponSystem : MonoBehaviour
         }
     }
 
+    /// Change equipped weapon slot safely and reset shot cooldown (fix later on, rpg can be spammed)
     void SetIndex(int i)
     {
         currentIndex = Mathf.Clamp(i, 0, Mathf.Max(0, loadout.Count - 1));
-        cooldown = 0f;
+        cooldown = 0f;  //
     }
 
+    /// Input System (send messages): next/prev weapon bindings
     public void OnNextWeapon(InputValue _)
     {
         SetIndex((currentIndex + 1) % loadout.Count);
@@ -80,8 +86,10 @@ public class WeaponSystem : MonoBehaviour
         SetIndex((currentIndex - 1 + loadout.Count) % loadout.Count);
     }
 
+    /// Starting point, helps route to correct firing mode for the active weapon
     void Fire(WeaponData w)
     {
+        // Reads direction from PlayerAim 
         Vector2 direct;
         if (aim != null)
         {
@@ -91,9 +99,9 @@ public class WeaponSystem : MonoBehaviour
         {
             direct = Vector2.right;
         }
-
         Vector2 origin = muzzle.position;
 
+        // Checks the weapon kind
         switch (w.kind)
         {
             case WeaponKind.Hitscan:
@@ -120,16 +128,20 @@ public class WeaponSystem : MonoBehaviour
         Destroy(lr.gameObject);
     }
 
+    /// Hitscan, cast rays instantly, has the option for rays to be blocked by walls (blockmask), one tracer per bullet
     void FireHitscan(WeaponData w, Vector2 origin, Vector2 direct)
     {
-        PlayMuzzleFlash();
+        PlayMuzzleFlash();      //Visual line at the muzzle
 
         int pellets = Mathf.Max(1, w.pellets);
         for (int i = 0; i < pellets; i++)
         {
+            //Spread, rotate direction by a small random angle within +- spread/2
+            //angle in radians to (cos, sin) build a 2D rotation
             Vector2 d = ApplySpread(direct, w.spreadDegrees);
-            RaycastHit2D hit;
 
+            //If blockmask is on, combine hitmask so walls stop rays
+            RaycastHit2D hit;
             if (w.blockMask.value != 0)
             {
                 hit = Physics2D.Raycast(origin, d, w.range, w.hitMask | w.blockMask);
@@ -139,17 +151,19 @@ public class WeaponSystem : MonoBehaviour
                 hit = Physics2D.Raycast(origin, d, w.range, w.hitMask);
             }
 
+            // Default end equals to max range along d (shows tracer range if nothing is hit)
             Vector2 end = origin + d * w.range;
 
             if (hit.collider != null)
             {
-                var h = hit.collider.GetComponent<Health>();
+                //If the first thing we hit is damageable, apply the correct amount of damage
+                var h = hit.collider.GetComponent<EnemyHealth>();
                 if (h)
                 {
-                    h.TakeDamage(w.damage);
+                    h.EnemyTakeDamage(w.damage);
                 }
 
-                end = hit.point;
+                end = hit.point;    //Cut tracer to impact
             }
 
             if (tracerPrefab)
@@ -159,6 +173,7 @@ public class WeaponSystem : MonoBehaviour
         }
     }
 
+    /// Projectile, instantiate a projectile prefab and lit it steer itself (go straight in the direction of initial fire)
     void FireProjectile(WeaponData w, Vector2 origin, Vector2 direct)
     {
         int pellets = Mathf.Max(1, w.pellets);
@@ -166,28 +181,36 @@ public class WeaponSystem : MonoBehaviour
         {
             Vector2 d = ApplySpread(direct, w.spreadDegrees);
             var p = Instantiate(w.projectilePrefab);
+
+            // Hand off movement, rotation, lifetime, masks to projectile
             p.Fire(origin, d, w.damage, w.projectileSpeed, w.projectileLifeTime, w.hitMask);
         }
     }
 
+    /// Melee, overlap a circle, them keep only targets inside the swing arc (wedges)
     void DoMelee(WeaponData w, Vector2 origin, Vector2 direct)
     {
-        var hits = Physics2D.OverlapCircleAll(origin + direct * (w.meleeRange * 0.6f), w.meleeRange, w.hitMask);
+        //Get targets in a circle centered slightly along the aim direction
+        var hits = Physics2D.OverlapCircleAll(origin + direct * (w.meleeRange * 0.6f), w.meleeRange, w.hitMask);    //degrees, symmetric wedges along direction
         float halfArc = w.meleeArcDegrees * 0.5f;
 
         foreach (var c in hits)
         {
+            // Vector from player to target (normalized for angle math)
             Vector2 to = ((Vector2)c.transform.position - origin).normalized;
+
+            // Angle (direction, to) is less than or equal to halfarc, then target is inside the swing wedge
             if (Vector2.Angle(direct, to) <= halfArc)
             {
-                var h = c.GetComponent<Health>();
+                var h = c.GetComponent<EnemyHealth>();
                 if (h)
                 {
-                    h.TakeDamage(w.damage);
+                    h.EnemyTakeDamage(w.damage);
                 }
             }
         }
 
+        // Wedge VFX to show the swing arc
         if (meleeArcPrefab)
         {
             var fx = Instantiate(meleeArcPrefab);
@@ -195,6 +218,8 @@ public class WeaponSystem : MonoBehaviour
         }
     }
 
+    /// Rotate direction by a random angle (jitter) within +- (spreadDegrees/2)
+    /// Returns a unit vector
     static Vector2 ApplySpread(Vector2 direct, float spreadDegrees)
     {
         if (spreadDegrees <= 0f)
@@ -202,33 +227,42 @@ public class WeaponSystem : MonoBehaviour
             return direct;
         }
 
-        float ang = Random.Range(-spreadDegrees * 0.5f, spreadDegrees * 0.5f) * Mathf.Deg2Rad;
+        float ang = Random.Range(-spreadDegrees * 0.5f, spreadDegrees * 0.5f) * Mathf.Deg2Rad; //degrees to radians
         float cs = Mathf.Cos(ang), sn = Mathf.Sin(ang);
+        
+        //2D rotation:
+        //      [x'] = [ cos   -sin][x]
+        //      [y'] = [ sin    cos][y]
         return new Vector2(direct.x * cs - direct.y * sn, direct.x * sn + direct.y * cs).normalized;
     }
 
     void Update()
     {
+        //No weapons then do nothing
         if (loadout == null || loadout.Count == 0)
         {
             return;
         }
 
+        // Check the input action every frame so firing is always right
         if (playerInput)
         {
             isFiring = playerInput.actions[fireActionName].IsPressed();
         }
 
+        // Rate-gate, reduce cooldown, and only fire when gate is open
         var w = loadout[currentIndex];
         cooldown -= Time.deltaTime;
 
         if (isFiring && cooldown <= 0f)
         {
             Fire(w);
+            // Convert fireRate (shots/sec) to (sec/shots)
             cooldown = 1f / Mathf.Max(0.01f, w.fireRate);
         }
     }
 
+    /// Safely deafault so firing never sticks/locks up when component toggles
     void OnEnable()
     {
         isFiring = false;
@@ -239,13 +273,14 @@ public class WeaponSystem : MonoBehaviour
         isFiring = false;
     }
 
+    /// These will get called by Send Messages
     public void OnFireStarted()
     {
-        isFiring = true;
+        isFiring = true;    //press down
     }
 
     public void OnFireCanceled()
     {
-        isFiring = false;
+        isFiring = false;   //release
     }
 }

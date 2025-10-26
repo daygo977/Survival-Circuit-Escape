@@ -28,8 +28,8 @@ public class WeaponData : ScriptableObject
     public float range = 12f;
 
     [Header("Masks")]
-    public LayerMask hitMask;
-    public LayerMask blockMask;
+    public LayerMask hitMask;       //Layers that can be damaged
+    public LayerMask blockMask;     //Layers that stop rays (used for walls)
 
     [Header("Projectile (RPG, grenades, etc.)")]
     public ProjectileBase projectilePrefab;

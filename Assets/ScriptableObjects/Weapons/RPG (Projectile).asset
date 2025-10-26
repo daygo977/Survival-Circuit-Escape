@@ -21,7 +21,7 @@ MonoBehaviour:
   range: 15
   hitMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 192
   blockMask:
     serializedVersion: 2
     m_Bits: 0
