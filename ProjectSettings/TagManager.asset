@@ -39,15 +39,18 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Floor
+    uniqueID: 3168063567
+    locked: 0
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: VFX
-    uniqueID: 2595549063
     locked: 0
   - name: Enemies
     uniqueID: 3946868209
     locked: 0
   - name: Bullets
     uniqueID: 3945186215
+    locked: 0
+  - name: VFX
+    uniqueID: 2595549063
     locked: 0
