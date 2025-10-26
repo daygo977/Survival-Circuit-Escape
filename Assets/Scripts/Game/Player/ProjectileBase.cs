@@ -73,9 +73,8 @@ public class ProjectileBase : MonoBehaviour
         if (h)
         {
             h.EnemyTakeDamage(damage);
-
-            Despawn();      //remove projectile on hit
         }
+        Despawn();      //remove projectile on hit
     }
 
     protected void Despawn()
