@@ -130,13 +130,28 @@ public class EnemySpawner : MonoBehaviour
                 {
                     yield return null;
                 }
+
+                //New (10/27/2025)
+                //refresh HUD
+                UpdateHUDEnemyInfo();
             }
 
             //We have spawned this wave and hit spawnCount
             //If loop is true, wait the loop pause, then start new wave iteration
             if (loop)
             {
-                yield return new WaitForSeconds(loopPause);
+                //Modified (10/27/2025)
+                //Old: yield return new WaitForSeconds(loopPause)
+                //New: (below) we do a live countdown and push the timer info to HUD each frame
+                float t = loopPause;
+                while (t > 0f)
+                {
+                    HUDManager.SetWaveCountdown(t);
+                    t -= Time.deltaTime;
+                    yield return null;  //wait one frame
+                }
+                // Count is over, so the countdown and all text
+                HUDManager.ClearWaveCountdown();
             }
         }
         while (loop);
@@ -238,6 +253,10 @@ public class EnemySpawner : MonoBehaviour
     public void NotifyEnemyGone()
     {
         _alive = Mathf.Max(0, _alive - 1);
+
+        //New (10/27/2025)
+        //refresh HUD
+        UpdateHUDEnemyInfo();
     }
 
     /// Trys to pick a non-overlapping position:
