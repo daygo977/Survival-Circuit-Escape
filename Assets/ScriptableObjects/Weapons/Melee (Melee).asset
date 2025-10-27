@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b22a0dc56b9b5564b9524f4e097f21f4, type: 3}
   m_Name: Melee (Melee)
   m_EditorClassIdentifier: 
-  displayName: Weapon
+  displayName: Melee (Swing Arc Hitscan)
   kind: 2
   fireRate: 3
   damage: 3

@@ -2280,10 +2280,10 @@ MonoBehaviour:
   spawnDelay: 0.15
   spawnCount: 100
   loop: 1
-  loopPause: 30
-  clearRadius: 0.6
-  maxPlacementTries: 8
-  jitterRadius: 0.8
+  loopPause: 10
+  clearRadius: 1
+  maxPlacementTries: 12
+  jitterRadius: 5
   maxAlive: 20
   activationRadius: 10
   player: {fileID: 1791803308}

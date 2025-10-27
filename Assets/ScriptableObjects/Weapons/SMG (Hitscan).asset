@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b22a0dc56b9b5564b9524f4e097f21f4, type: 3}
   m_Name: SMG (Hitscan)
   m_EditorClassIdentifier: 
-  displayName: Weapon
+  displayName: SMG (Hitscan)
   kind: 0
   fireRate: 13
   damage: 1
