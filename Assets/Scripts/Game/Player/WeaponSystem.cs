@@ -260,6 +260,14 @@ public class WeaponSystem : MonoBehaviour
             // Convert fireRate (shots/sec) to (sec/shots)
             cooldown = 1f / Mathf.Max(0.01f, w.fireRate);
         }
+
+        //New (10/27/2025): push player info to HUD (every frame)
+        var hp = GetComponent<PlayerHealth>();
+        if (hp != null)
+        {
+            //Takes lives, current and max hp, and weapon currently using display name (AR, Shotgun, SMG, RPG, Melee)
+            HUDManager.SetPlayerInfo(hp.Lives, hp.CurrentHP, hp.maxHp, w.displayName);
+        }
     }
 
     /// Safely deafault so firing never sticks/locks up when component toggles
