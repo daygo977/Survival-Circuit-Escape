@@ -2614,8 +2614,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHp: 3
-  startingLives: 0
-  invulTime: 0.75
+  startingLives: 2
+  invulTime: 1
 --- !u!58 &1791803315
 CircleCollider2D:
   m_ObjectHideFlags: 0
