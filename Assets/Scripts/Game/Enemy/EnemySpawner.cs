@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 /// <summary>
 /// Spawn Enemies, either in set numbers, or looped waves:
@@ -177,6 +178,10 @@ public class EnemySpawner : MonoBehaviour
         var ticket = go.AddComponent<EnemySpawnTicket>();
         ticket.owner = this;
 
+        //New (10/27/2025)
+        //refresh HUD
+        UpdateHUDEnemyInfo();
+
         return true;
     }
 
@@ -283,6 +288,16 @@ public class EnemySpawner : MonoBehaviour
             return false;
         }
         return true;
+    }
+
+    /// Added (10/27/2025)
+    /// Pushes enemy info (enemies currently alive and enemies left in wave)
+    /// Helper function
+    void UpdateHUDEnemyInfo()
+    {
+        int remainToSpawn = Mathf.Max(0, spawnCount - _spawned);
+        int waveLeftTotal = _alive + remainToSpawn;
+        HUDManager.SetEnemyInfo(_alive, waveLeftTotal);
     }
 
     /// Scene/Editor debug gizmos:
