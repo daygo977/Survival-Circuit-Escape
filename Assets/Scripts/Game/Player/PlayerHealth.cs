@@ -24,6 +24,10 @@ public class PlayerHealth : MonoBehaviour
         // Initialize current state from configured stats
         CurrentHP = maxHp;
         Lives = startingLives;
+
+        //New (10/27/2025)
+        //initial HUD state at game start
+        HUDManager.SetHealthOnly(Lives, CurrentHP, maxHp);
     }
 
     /// Apply damage to player (ignored if invulnerable or dmg <= 0)
@@ -76,6 +80,10 @@ public class PlayerHealth : MonoBehaviour
             // Got damaged, but still have HP
             StartInvul();
         }
+
+        //New (10/27/2025)
+        //push latest lives/HP, even if player can't move and weapon systems are disabled
+        HUDManager.SetHealthOnly(Lives, CurrentHP, maxHp);
     }
 
     /// Begin I-frames (prevents getting hit multiple times in a small window)

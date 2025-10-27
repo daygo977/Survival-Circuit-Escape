@@ -50,6 +50,12 @@ public class HUDManager : MonoBehaviour
         if (_UI_TEXT_TOPLEFT_3) _UI_TEXT_TOPLEFT_3.text = $"Weapon: {weaponName}";
     }
 
+    public static void SetHealthOnly(int lives, int hpNow, int hpMax)
+    {
+        if (_UI_TEXT_TOPLEFT_1) _UI_TEXT_TOPLEFT_1.text = $"Lives: {lives}";
+        if (_UI_TEXT_TOPLEFT_2) _UI_TEXT_TOPLEFT_2.text = $"HP: {hpNow}/{hpMax}";
+    }
+
     public static void SetWaveCountdown(float secondsLeft)
     {
         if (_UI_TEXT_TOPCENTER) _UI_TEXT_TOPCENTER.text = $"Next Wave: {secondsLeft: 0.0} sec";
