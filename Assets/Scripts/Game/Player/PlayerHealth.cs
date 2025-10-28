@@ -19,6 +19,15 @@ public class PlayerHealth : MonoBehaviour
     bool invul;         // True while invulnerable
     float invulTimer;   // Remaining I-frame time
 
+    //New (10/27/2025)
+    // Add gizmo hurtbox (circle) to help with player hurtbox size tuning
+    [Header("Hurtbox (debug/tuning)")]
+    [Tooltip("Radius of the player's hurt circle in world units")]
+    public float hurtRadius = 0.5f;
+    [Tooltip("Offset from the player's transform.position, in world units. Use to move circle up to match the body")]
+    public Vector2 hurtOffset = Vector2.zero;
+    [Tooltip("Color to visualize the hurt circle in Scene")]
+    public Color hurtColor = new Color(1f, 0f, 0f, 0.25f);
     void Awake()
     {
         // Initialize current state from configured stats
@@ -106,5 +115,18 @@ public class PlayerHealth : MonoBehaviour
             // I-frames end, damage can be applied again
             invul = false;
         }
+    }
+
+    //New (10/27/2025)
+    //Draw hurt circle in Scene when player is selected
+    private void OnDrawGizmos()
+    {
+        //Compute world=space center of the hurt circle
+        //player position + offset in inspector
+        Vector3 center = transform.position + (Vector3)hurtOffset;
+
+        //Outline
+        Gizmos.color = hurtColor.a > 0f ? new Color(hurtColor.r, hurtColor.g, hurtColor.b, 1f) : Color.red;
+        Gizmos.DrawWireSphere(center, hurtRadius);
     }
 }

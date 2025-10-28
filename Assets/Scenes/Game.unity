@@ -2616,6 +2616,9 @@ MonoBehaviour:
   maxHp: 3
   startingLives: 2
   invulTime: 1
+  hurtRadius: 0.47
+  hurtOffset: {x: 0, y: 0}
+  hurtColor: {r: 1, g: 0, b: 0, a: 0}
 --- !u!58 &1791803315
 CircleCollider2D:
   m_ObjectHideFlags: 0

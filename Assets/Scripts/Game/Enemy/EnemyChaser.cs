@@ -130,11 +130,30 @@ public class EnemyChaser : MonoBehaviour
 
         // Attack cooldown
         cd -= Time.fixedDeltaTime;
-        if (dist <= attackRange && cd <= 0f && playerHealth != null)
+        
+        //New (10/27/2025)
+        //Old: Dealt damage to player based on distance from center (once enemy was in set distance)
+        //Now: Deals damage to player if enemy hitbox (circle) attack range crosses player hurtbox (circle)
+        //If overlap occurs and cooldown is ready, deal damage.
+        if (cd <= 0f && playerHealth != null)
         {
-            // Apply damage to the player and reset the cool down
-            playerHealth.PlayerTakeDamage(contactDamage);
-            cd = attackCooldown;
+            //Get player hurt center (center + offset), and hurt radius
+            Vector2 playerHurtCenter = (Vector2)playerHealth.transform.position + playerHealth.hurtOffset;
+            float playerHurtRadius = playerHealth.hurtRadius;
+
+            //Get enemy attack circle (center and range)
+            Vector2 enemyCenter = (Vector2)transform.position;
+            float enemyAttackRadius = attackRange;
+
+            //Distance between player center and enemy center
+            float distToPlayer = Vector2.Distance(enemyCenter, playerHurtCenter);
+
+            //If circles overlap, its a hit
+            if (distToPlayer <= (playerHurtRadius + enemyAttackRadius))
+            {
+                playerHealth.PlayerTakeDamage(contactDamage);
+                cd = attackCooldown;
+            }
         }
     }
 

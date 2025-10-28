@@ -176,9 +176,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3701f92c5e4a63047a8ce9c684fb45f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  slowRadius: 1.5
-  stopDistance: 0.35
+  moveSpeed: 4.8
+  slowRadius: 1.8
+  stopDistance: 0.38
   obstacleMask:
     serializedVersion: 2
     m_Bits: 0
