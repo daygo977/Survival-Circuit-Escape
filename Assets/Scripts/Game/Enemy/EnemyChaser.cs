@@ -52,6 +52,11 @@ public class EnemyChaser : MonoBehaviour
             target = playerGO.transform;
             playerHealth = playerGO.GetComponent<PlayerHealth>();
         }
+
+        //New (10/28/2025)
+        //Apply Difficulty multipliers
+        moveSpeed *= GlobalDifficulty.enemySpeedMul;
+        attackRange *= GlobalDifficulty.enemyAttackRange;
     }
 
     void FixedUpdate()

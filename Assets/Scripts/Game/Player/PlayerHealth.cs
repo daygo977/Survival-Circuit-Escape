@@ -8,6 +8,7 @@ public class PlayerHealth : MonoBehaviour
     public int maxHp = 3;           //HP per life
     public int startingLives = 2;   //How many lifes the player starts with
 
+
     [Header("Damage/I-frames")]
     public float invulTime = 0.75f; //seconds of I-frames hit/respawn
 
@@ -28,6 +29,7 @@ public class PlayerHealth : MonoBehaviour
     public Vector2 hurtOffset = Vector2.zero;
     [Tooltip("Color to visualize the hurt circle in Scene")]
     public Color hurtColor = new Color(1f, 0f, 0f, 0.25f);
+
     void Awake()
     {
         // Initialize current state from configured stats
@@ -128,5 +130,20 @@ public class PlayerHealth : MonoBehaviour
         //Outline
         Gizmos.color = hurtColor.a > 0f ? new Color(hurtColor.r, hurtColor.g, hurtColor.b, 1f) : Color.red;
         Gizmos.DrawWireSphere(center, hurtRadius);
+    }
+
+    /// New (10/28/2025)
+    /// On start apply difficulty stats
+    void Start()
+    {
+        //Get stats from button pressed (difficulty buttons)
+        startingLives = GlobalDifficulty.playerStartingLives;
+        maxHp = GlobalDifficulty.playerStartingHP;
+
+        Lives = startingLives;
+        CurrentHP = maxHp;
+
+        HUDManager.SetHealthOnly(Lives, CurrentHP, maxHp);
+
     }
 }

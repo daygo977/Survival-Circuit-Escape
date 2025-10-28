@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: SMG (Hitscan)
   kind: 0
-  fireRate: 13
+  fireRate: 16
   damage: 1
   pellets: 1
   spreadDegrees: 6

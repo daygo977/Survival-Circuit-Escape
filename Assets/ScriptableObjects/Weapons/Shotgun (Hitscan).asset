@@ -15,9 +15,9 @@ MonoBehaviour:
   displayName: Shotgun (Hitscan)
   kind: 0
   fireRate: 1.2
-  damage: 1
+  damage: 2
   pellets: 10
-  spreadDegrees: 20
+  spreadDegrees: 30
   range: 8
   hitMask:
     serializedVersion: 2
