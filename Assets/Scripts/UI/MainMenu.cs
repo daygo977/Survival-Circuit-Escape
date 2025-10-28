@@ -1,5 +1,7 @@
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 
 /// <summary>
@@ -17,6 +19,9 @@ public class MainMenu : MonoBehaviour
     [Header("Scene to Load")]
     [SerializeField] private string gameSceneName = "Game";
 
+    //New (10/28/2025)
+    [SerializeField] private Button easyButton;
+
     /// Play button pressed
     public void OnPlayPressed()
     {
@@ -24,6 +29,11 @@ public class MainMenu : MonoBehaviour
         //Show text (Select Difficulty) and game difficulty
         mainGroup.SetActive(false);
         difficultyGroup.SetActive(true);
+
+        //New (10/28/2025)
+        // Make sure event system has a live selection so gamepad can navigate
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(easyButton.gameObject);
     }
 
     /// Quit button pressed
