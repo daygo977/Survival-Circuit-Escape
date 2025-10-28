@@ -75,7 +75,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -348099087
-  m_SortingLayer: 2
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
@@ -187,9 +187,9 @@ MonoBehaviour:
   avoidWeight: 2
   attackRange: 0.6
   contactDamage: 1
-  attackCooldowm: 0.7
+  attackCooldown: 0.7
   enemyMask:
     serializedVersion: 2
     m_Bits: 64
-  seperationRadius: 0.8
-  seperationWeight: 1.5
+  separationRadius: 0.8
+  separationWeight: 1.5

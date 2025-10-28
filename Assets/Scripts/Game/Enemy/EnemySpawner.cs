@@ -135,6 +135,15 @@ public class EnemySpawner : MonoBehaviour
                 //refresh HUD
                 UpdateHUDEnemyInfo();
             }
+            
+            //New (10/27/2025)
+            //wait until all spawned enemies are dead before starting next-wave countdown
+            while (_alive > 0)
+            {
+                //left in wave == alive at this point
+                HUDManager.SetEnemyInfo(_alive, _alive);
+                yield return null;
+            }
 
             //We have spawned this wave and hit spawnCount
             //If loop is true, wait the loop pause, then start new wave iteration
