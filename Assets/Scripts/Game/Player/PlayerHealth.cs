@@ -83,6 +83,11 @@ public class PlayerHealth : MonoBehaviour
                 {
                     rb.velocity = Vector2.zero;
                 }
+                
+                //New (10/28/2025)
+                //When player out of lives and HP, after disables trigger game over screen
+                var gameOverUI = FindObjectOfType<GameStateManager>();
+                if (gameOverUI != null) gameOverUI.TriggerGameOver();
 
             }
         }
