@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using UnityEditor.EditorTools;
 using UnityEngine;
 
 public enum WeaponKind { Hitscan, Projectile, Melee }
