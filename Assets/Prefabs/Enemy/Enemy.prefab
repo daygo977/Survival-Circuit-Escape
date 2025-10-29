@@ -162,7 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95b30bb08ce46814fa63b81d91cb179e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 4
+  hp: 3
   destroyDelay: 0.2
 --- !u!114 &1062008867888383413
 MonoBehaviour:
@@ -176,15 +176,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3701f92c5e4a63047a8ce9c684fb45f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 4
-  slowRadius: 1.5
-  stopDistance: 0.38
+  moveSpeed: 3.75
+  slowRadius: 1.8
+  stopDistance: 0.4
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
-  feelerLength: 1.2
-  sideAngle: 30
-  avoidWeight: 2
+    m_Bits: 128
+  feelerLength: 1
+  sideAngle: 35
+  avoidWeight: 3.5
   attackRange: 0.55
   contactDamage: 1
   attackCooldown: 0.82

@@ -5,22 +5,22 @@ public class EnemyChaser : MonoBehaviour
 {
     // Enemy movement/chase tuning
     [Header("Chase")]
-    public float moveSpeed = 5f;        // Max chase speed (needs to match player speed)
-    public float slowRadius = 1.5f;     // Slowdown distance when close to player
-    public float stopDistance = 0.35f;  // Stop when distance to player has been met (prevents jitter)
+    public float moveSpeed = 3.75f;        // Max chase speed (needs to match player speed)
+    public float slowRadius = 1.8f;     // Slowdown distance when close to player
+    public float stopDistance = 0.4f;  // Stop when distance to player has been met (prevents jitter)
 
     // Obstacle avoidance (using rays "feeler")
     [Header("Avoidance (for walls)")]
     public LayerMask obstacleMask;      // Obstacle to treat as wall
-    public float feelerLength = 1.2f;   // Raycast length in front/side directions
-    public float sideAngle = 30f;       // Side feeler angles
-    public float avoidWeight = 2f;      // Determines how strong avoidance influences steering
+    public float feelerLength = 1f;   // Raycast length in front/side directions
+    public float sideAngle = 35f;       // Side feeler angles
+    public float avoidWeight = 3.5f;      // Determines how strong avoidance influences steering
 
     // Attack tuning
     [Header("Attack")]
-    public float attackRange = 0.6f;    // Can hit player within radius
+    public float attackRange = 0.55f;    // Can hit player within radius
     public int contactDamage = 1;       // Damage per hit
-    public float attackCooldown = 0.7f; // Time between hits (prevent same enemy from attacking too quickly)
+    public float attackCooldown = 0.82f; // Time between hits (prevent same enemy from attacking too quickly)
 
     // Crowd Separation (prevents stacking)
     [Header("Crowd Separation")]
