@@ -1,0 +1,18 @@
+Some of the things that were cut from what was originally proposed for my game "Survival Circuit: Escape" was the following:
+* Escape room progression: I had planned to have interactive clues, gate that lead to rooms, and next stage unlocks.
+* Score points: Points that would accumulate with damage/kills to enemies, which allowed the player to obtain upgrades/weapons/perks
+* Perk/Abilities: Had to cut abilities/perks due to time constraints
+* Enemy Types: Originally there were going to be 3/4 enemy types that had their own way of chasing/attacking the player.
+* BGM (Background music)
+* Map areas: There was going to be map areas/biomes that differed from one another. 
+
+What was implemented/additions/substitutions was:
+* Core top-down shooter gameplay. With both mouse and keyboard, and controller input. To switch weapons, use Q and E to cycle with Keyboard, for controller use left or right bumpers. To move use WASD and mouse for aim. Controller is left stick for movement and right stick for aim. Left click for fire, and right trigger for fire (controller).
+* Weapons: Originally player was going to have one weapon, and was able to gain more via the score/currency system. However, had to cut that system, and in the end decided to give player AR/SMG/Shotgun/RPG/Melee weapons.
+* HUD: Showed lives and hp for player. As well as, currently held weapon. For enemy HUD, had how many were currently spawned in the map (with a cap of 20 enemies at a time), and a left to spawn counter (which was set at 100 enemies per wave). Also had a countdown till next wave timer appear, when all wave enemies were defeated, which also reset the enemies in wave to 100.
+* Enemy Spawn: Wave system with spawn cap, spawn delay/jitter/clear radius, and per-wave count. Proximity activation spawn points for enemies.
+* Difficulty: Had base stats for enemies and players set for normal mode, and use multipliers (for enemies) to increase or decrease difficulty. For player, adjust lives, depending on difficulty. Had EASY/NORMAL/HARD/NIGHTMARE, player had 3 lives for easy, 2 for normal and hard, and 0 for nightmare.
+* UI flow: Main Menu scene, and game scene has a pause overlay which is triggered with ESC (Escape key). Unfortunately, could not configure controller input for pause overlay call. When, player would lose, disable ESC for pause menu and rewired it to Game Over. When hit ESC in Game Over, it would lead to main menu. Pause overlay has resume, main menu, and quit to desktop buttons. Game Over has retry (which reloads game scene, with difficulty player choose in main menu), main menu, and quit to desktop buttons. Main Menu has play and quit buttons, but when pressing play, would show 4 difficulty buttons.
+* Physics/Map: Floor (tile map, and player can walk on it) and Walls with 2D collider (tile map, but player cannot walk or go over it). Walls also stop bullets and projectiles, and when player goes and makes contact with walls, slows player down.
+* I-frames: When player would get hit, I-frames would activate allowing a 1 second window for the player to not get hit by enemy.
+* Weapon SFX: Added basic SFX to weapons
