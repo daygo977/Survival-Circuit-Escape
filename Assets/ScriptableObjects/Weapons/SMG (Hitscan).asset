@@ -31,7 +31,7 @@ MonoBehaviour:
   meleeArcDegrees: 0
   meleeRange: 0
   fireSFX: {fileID: 8300000, guid: eb93731d37168834b8397c9e5a97fc5f, type: 3}
-  fireVolume: 0.1
+  fireVolume: 0.09
   pitchRefFireRate: 15
   pitchBase: 1
   pitchClamp: 0.3
