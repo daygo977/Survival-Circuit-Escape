@@ -30,3 +30,12 @@ MonoBehaviour:
   projectileLifeTime: 0
   meleeArcDegrees: 0
   meleeRange: 0
+  fireSFX: {fileID: 8300000, guid: e39fe89f7f267424e8554c2180a537b3, type: 3}
+  fireVolume: 0.15
+  pitchRefFireRate: 1.2
+  pitchBase: 1
+  pitchClamp: 0.3
+  launchSFX: {fileID: 0}
+  launchVolume: 0.4
+  explosionAudio: {fileID: 0}
+  explosionVolume: 0.4

@@ -17,6 +17,13 @@ public class ProjectileBase : MonoBehaviour
     Rigidbody2D rb;
     float life;
 
+    //New (10/29/2025)
+    //Audio fields
+    AudioClip launchCLip;
+    float launchVol;
+    protected AudioClip explosionClip;
+    protected float explosionVol;
+
     protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -24,7 +31,9 @@ public class ProjectileBase : MonoBehaviour
         col.isTrigger = true;           //Triggers for OnTriggerEnter2D
     }
 
-    public virtual void Fire(Vector2 position, Vector2 direct, int dmg, float spd, float lifeTime, LayerMask mask)
+    ///New: Updated paramteres (10/29/2025)
+    /// include audio info
+    public virtual void Fire(Vector2 position, Vector2 direct, int dmg, float spd, float lifeTime, LayerMask mask, AudioClip launchSFX, float launchVolume, AudioClip explosionSFX, float explosionVolume)
     {
         transform.position = position;
 
@@ -39,9 +48,20 @@ public class ProjectileBase : MonoBehaviour
         hitMask = mask;
         life = lifetime;
 
+        //New (10/29/2025)
+        //Store audio references to use later
+        launchCLip = launchSFX;
+        launchVol = launchVolume;
+        explosionClip = explosionSFX;
+        explosionVol = explosionVolume;
+
         //Move in the normalized direction at speed
         gameObject.SetActive(true);
         rb.velocity = direct.normalized * speed;
+
+        //New (10/29/2025)
+        //Play launch audio at spawn
+        PlayOneShotAtPos(launchCLip, launchVol, position);
     }
 
     public virtual void Update()
@@ -82,5 +102,25 @@ public class ProjectileBase : MonoBehaviour
         rb.velocity = Vector2.zero;
         gameObject.SetActive(false);
         Destroy(gameObject);
+    }
+
+    ///New (10/29/2025)
+    ///Helper function, plays audio at world position without AudioSource on projectile
+    protected void PlayOneShotAtPos(AudioClip clip, float vol, Vector3 pos)
+    {
+        if (!clip) return;
+
+        GameObject temp = new GameObject("OneShotSFX");
+        temp.transform.position = pos;
+
+        var source = temp.AddComponent<AudioSource>();
+        source.spatialBlend = 0f;
+        source.playOnAwake = false;
+        source.loop = false;
+
+        source.PlayOneShot(clip, vol);
+
+        //Destroy temp after clip ends
+        Destroy(temp, clip.length);
     }
 }

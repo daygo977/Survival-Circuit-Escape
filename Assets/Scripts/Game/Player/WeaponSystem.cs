@@ -29,6 +29,11 @@ public class WeaponSystem : MonoBehaviour
     float cooldown;     //time until next shot is allowed to fire
     bool isFiring;      //current fire button state (pressed, held, no pressed/held)
 
+    //New (10/29/2025)
+    //Audio fields for weapons
+    [Header("Audio")]
+    [SerializeField] private AudioSource weaponAudioSource;
+
     void Awake()
     {
         //Auto-bind components when nothing is assigned to them
@@ -48,6 +53,13 @@ public class WeaponSystem : MonoBehaviour
             muzzle = new GameObject("Muzzle").transform;
             muzzle.SetParent(transform);
             muzzle.localPosition = new Vector3(0f, 0.5f, 0f);
+        }
+
+        //New (10/29/2025)
+        //Auto-grab audio source if not wired in inspector
+        if (!weaponAudioSource)
+        {
+            weaponAudioSource = GetComponent<AudioSource>();
         }
     }
 
@@ -133,6 +145,10 @@ public class WeaponSystem : MonoBehaviour
     {
         PlayMuzzleFlash();      //Visual line at the muzzle
 
+        //New (10/29/2025)
+        //Play AR/SMG/shotgun audio
+        PlayFireSFX(w);
+
         int pellets = Mathf.Max(1, w.pellets);
         for (int i = 0; i < pellets; i++)
         {
@@ -176,6 +192,10 @@ public class WeaponSystem : MonoBehaviour
     /// Projectile, instantiate a projectile prefab and lit it steer itself (go straight in the direction of initial fire)
     void FireProjectile(WeaponData w, Vector2 origin, Vector2 direct)
     {
+        //New (10/29/2025)
+        //Play launch audio
+        PlayLaunchSFX(w);
+
         int pellets = Mathf.Max(1, w.pellets);
         for (int i = 0; i < pellets; i++)
         {
@@ -183,13 +203,17 @@ public class WeaponSystem : MonoBehaviour
             var p = Instantiate(w.projectilePrefab);
 
             // Hand off movement, rotation, lifetime, masks to projectile
-            p.Fire(origin, d, w.damage, w.projectileSpeed, w.projectileLifeTime, w.hitMask);
+            p.Fire(origin, d, w.damage, w.projectileSpeed, w.projectileLifeTime, w.hitMask, w.launchSFX, w.launchVolume, w.explosionAudio, w.explosionVolume);
         }
     }
 
     /// Melee, overlap a circle, them keep only targets inside the swing arc (wedges)
     void DoMelee(WeaponData w, Vector2 origin, Vector2 direct)
     {
+        //New (10/29/2025)
+        //Play melee audio
+        PlayFireSFX(w);
+
         //Get targets in a circle centered slightly along the aim direction
         var hits = Physics2D.OverlapCircleAll(origin + direct * (w.meleeRange * 0.6f), w.meleeRange, w.hitMask);    //degrees, symmetric wedges along direction
         float halfArc = w.meleeArcDegrees * 0.5f;
@@ -290,5 +314,57 @@ public class WeaponSystem : MonoBehaviour
     public void OnFireCanceled()
     {
         isFiring = false;   //release
+    }
+
+    /// New (10/29/2025)
+    /// Helper function
+    /// Calculate pitch based on fire rate so SMG (higher fire rate) sounds tighter than AR (lower fire rate) sound 
+    float ComputePitch(WeaponData w)
+    {
+        if (w == null) return 1f;
+
+        //If pitchRefFireRate is 10 and this gun fires at 14, r = 1.4, so we raise pitch
+        //If gun fires at 8, then r = 0.8, we lower pitch
+        float r;
+        if (w.pitchRefFireRate > 0f)
+        {
+            r = w.fireRate / w.pitchRefFireRate;
+        }
+        else
+        {
+            r = 1f;
+        }
+
+        //turn into offset around w.pitchBase
+        float offset = r - 1f;
+
+        // clamp offset so it doesn't become cartonish
+        offset = Mathf.Clamp(offset, -w.pitchClamp, w.pitchClamp);
+
+        return w.pitchBase + offset;
+    }
+
+    ///New (10/29/2025)
+    /// Plays hit scan audio for AR/SMG/Shotgun/Melee
+    void PlayFireSFX(WeaponData w)
+    {
+        if (!weaponAudioSource) return;
+        if (!w) return;
+        if (!w.fireSFX) return;
+
+        weaponAudioSource.pitch = ComputePitch(w);
+        weaponAudioSource.PlayOneShot(w.fireSFX, w.fireVolume);
+    }
+    
+    ///New (10/29/2025)
+    /// Plays projectile launch audio for RPG
+    void PlayLaunchSFX(WeaponData w)
+    {
+        if (!weaponAudioSource) return;
+        if (!w) return;
+        if (!w.launchSFX) return;
+
+        weaponAudioSource.pitch = 1f;
+        weaponAudioSource.PlayOneShot(w.launchSFX, w.launchVolume);
     }
 }

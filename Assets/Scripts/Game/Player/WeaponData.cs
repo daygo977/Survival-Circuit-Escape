@@ -1,3 +1,5 @@
+using System.ComponentModel;
+using UnityEditor.EditorTools;
 using UnityEngine;
 
 public enum WeaponKind { Hitscan, Projectile, Melee }
@@ -41,4 +43,32 @@ public class WeaponData : ScriptableObject
     public float meleeArcDegrees = 100f;
     [Tooltip("How far from the player the swing reaches")]
     public float meleeRange = 1.6f;
+
+    //New(10/29/2025)
+    //Audio Fields
+    [Header("Audio - Fire/Swing")]
+    [Tooltip("Sound to play when weapon fires (hitscan) or swings. For AR and SMG can use same Audio")]
+    public AudioClip fireSFX;
+    [Range(0f, 1f)]
+    public float fireVolume = 0.4f;
+
+    [Tooltip("Reference fire rate for pitch math. fire rate vs this gives pitch. Example: 10 means 10 shots/sec sounds pitchBase.")]
+    public float pitchRefFireRate = 10f;
+
+    [Tooltip("Base pitch (1 = normal). We auto-raise/lower around this based on fire rate")]
+    public float pitchBase = 1f;
+
+    [Tooltip("Max +/- pitch range allowed by scaling. Example: 0.4 means base-0.4 and base+0.4")]
+    public float pitchClamp = 0.3f;
+
+    [Header("Audio - Projectile (RPG)")]
+    [Tooltip("Play once when a projectile is spawned/launched")]
+    public AudioClip launchSFX;
+    [Range(0f, 1f)]
+    public float launchVolume = 0.4f;
+
+    [Tooltip("Played when projectile impact/explosion")]
+    public AudioClip explosionAudio;
+    [Range(0f, 1f)]
+    public float explosionVolume = 0.4f;
 }

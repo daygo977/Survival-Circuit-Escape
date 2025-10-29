@@ -22,6 +22,11 @@ public class RocketProjectile : ProjectileBase
                 h.EnemyTakeDamage(damage);
             }
         }
+
+        //New (10/29/2025)
+        //Play explosion SFX at impact point
+        PlayOneShotAtPos(explosionClip, explosionVol, transform.position);
+
         base.OnTriggerEnter2D(other);   //despawns itself via ProjectileBase.cs
     }
 }
