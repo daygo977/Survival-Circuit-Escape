@@ -32,8 +32,8 @@ public class PlayerAim : MonoBehaviour
     [Header("Gamepad")]
     [Range(0f, 1f)] public float stickDeadZone = 0.2f;  //Ignore tiny stick noise (stick drift)
 
-    // Optional rotation for the player towards aim direction
-    [Header("Optional")]
+    // Rotation for the player towards aim direction
+    [Header("Rotation to aim")]
     public bool rotateToAim = false;        //Rotation togle, off/on
     public float rotationSpeed = 720f;      //Degrees/sec smoothing for rotation
     public float spriteAngleOffset = -90f;  //Align sprite's foward with computed angle
@@ -45,6 +45,11 @@ public class PlayerAim : MonoBehaviour
     private Vector2 lastMouseScreen;            //Last screen-space mouse position (to detect movement)
     private float targetAngleDeg;               //Target facing angle in degrees
     public Vector2 AimDirection => aimDirect;   //read-only getter
+
+    //New (10/29/2025)
+    //Visuals, not affected by RigidBody2D colliison
+    [Header("Visual")]
+    public Transform visual;
 
     void Awake()
     {
@@ -130,26 +135,21 @@ public class PlayerAim : MonoBehaviour
 
         // If rotation is on, compute player facing angle (in degrees)
         if (rotateToAim)
-        {   
+        {
             // Mathf/Atan2 returns radians, so convert to degrees, then add to sprite offset
             targetAngleDeg = Mathf.Atan2(aimDirect.y, aimDirect.x) * Mathf.Rad2Deg + spriteAngleOffset;
         }
     }
 
+    /// Updated (10/29/2025)
+    /// No longer rotates physics and sprite (caused sprite to rotate uncontrollably when dragged across walls), now sprite only
     void FixedUpdate()
-    {
+    {   
+        //Safety check
+        if (!rotateToAim || visual == null) return;
 
-        if (!rotateToAim)
-        {
-            return;
-        }
-
-        // Current rigidbody rotation (degrees)
-        float current = rb.rotation;
-        // Smoothly move towards player angle at rotationSpeed (deg/sec)
-        float next = Mathf.MoveTowardsAngle(current, targetAngleDeg, rotationSpeed * Time.fixedDeltaTime);
-
-        // Rotate via physics API (helps avoid any conflicts with Rigidbody2D)
-        rb.MoveRotation(next);
+        //Rotate only the sprite (visual), physics body stay locked
+        var desired = Quaternion.Euler(0f, 0f, targetAngleDeg);
+        visual.rotation = Quaternion.RotateTowards(visual.rotation, desired, rotationSpeed * Time.deltaTime);
     }
 }

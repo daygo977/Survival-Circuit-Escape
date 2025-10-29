@@ -63,23 +63,6 @@ public class WeaponSystem : MonoBehaviour
         }
     }
 
-    /// Toggle small muzzle flash vfx (temporarly a orange circle) if present
-    void PlayMuzzleFlash()
-    {
-        if (!muzzle)
-        {
-            return;
-        }
-
-        //Looks under muzzle for a disabled MuzzleFlash object (child) and enables it briefly
-        var flash = muzzle.GetComponentInChildren<MuzzleFlash>(true);
-
-        if (flash)
-        {
-            flash.gameObject.SetActive(true);
-        }
-    }
-
     /// Change equipped weapon slot safely and reset shot cooldown (fix later on, rpg can be spammed)
     void SetIndex(int i)
     {
@@ -143,8 +126,6 @@ public class WeaponSystem : MonoBehaviour
     /// Hitscan, cast rays instantly, has the option for rays to be blocked by walls (blockmask), one tracer per bullet
     void FireHitscan(WeaponData w, Vector2 origin, Vector2 direct)
     {
-        PlayMuzzleFlash();      //Visual line at the muzzle
-
         //New (10/29/2025)
         //Play AR/SMG/shotgun audio
         PlayFireSFX(w);
