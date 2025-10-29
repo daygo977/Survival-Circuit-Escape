@@ -1,3 +1,5 @@
+Survival Circuit: Escape
+
 Some of the things that were cut from what was originally proposed for my game "Survival Circuit: Escape" was the following:
 * Escape room progression: I had planned to have interactive clues, gate that lead to rooms, and next stage unlocks.
 * Score points: Points that would accumulate with damage/kills to enemies, which allowed the player to obtain upgrades/weapons/perks
